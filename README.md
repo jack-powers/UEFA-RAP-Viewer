@@ -12,7 +12,10 @@ pip install vlc
 ```
 
 ## Usage
+### Windows Executable Version
+To allow wider use without the need for Python or package installations, an executable file for Windows machines can be found *here*.
 
+### Python Version
 Using the application is very similar to using previous versions of UEFA's Referee Assistance Programs. However, when the application is first launched, the user must specify the location of the *Resource* folder. Below is the file structure of the 2020-1 version. Hence the filepath you must navigate to in the pop up window will be `...\UEFA-2020-1\UEFA-2020-1\Resource`.
 
 
