@@ -36,7 +36,7 @@ def make_player_window(player):
 
 def make_welcome_window():
     layout = [[sg.Text("Welcome to UEFA viewer", justification='center')],
-              [sg.Text("Please enter or browse to path for the Resource folder of the RAP files and press Enter", justification='center')],
+              [sg.Text("Please enter or browse to path for the Resource folder of the RAP files and press Start", justification='center')],
         [sg.Input(default_text='C:/Users/jpowe/Desktop/UEFA-2020-1/UEFA-2020-1/Resource', size=(60, 1), key='-FOLDER_LOCATION-'), sg.FolderBrowse(), sg.Button('Start')]]
 
     return sg.Window("Start", layout, location=(800,600), finalize=True, keep_on_top=True)
@@ -250,4 +250,3 @@ while True:
         break
         
 window.close()
-window_back.close()
