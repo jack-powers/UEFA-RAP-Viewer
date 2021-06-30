@@ -12,7 +12,6 @@ list_player.set_media_list(media_list)
 player = list_player.get_media_player()
 
 
-
 #------- GUI definition & setup --------#
 
 sg.theme('DarkBlue')
