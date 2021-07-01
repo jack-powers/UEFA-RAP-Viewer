@@ -1,8 +1,7 @@
-# imports
+#------- imports --------#
 import PySimpleGUI as sg
-import vlc
 from sys import platform as PLATFORM
-import os, io
+import os, io, vlc
 from PIL import Image
 from images import *
 
