@@ -16,13 +16,13 @@ player = list_player.get_media_player()
 
 sg.theme('DarkBlue')
 
-def btn(name):  # a PySimpleGUI "User Defined Element" (see docs)
+def btn(name):
     return sg.Button(name, size=(10, 3), pad=(1, 1))
 
 def make_player_window(player):    
     layout = [[sg.Image('', size=(300, 170), key='-VID_OUT-')],
-              [btn('previous'), btn('play'), btn('next'), btn('pause'), btn('stop'), btn('show decision'), btn('show explanation'), btn('back')],
-              [sg.Text('Load media to start', key='-MESSAGE_AREA-')], [sg.Text('filename: ', key='-FILE_NAME-')]]
+              [ btn('play'), btn('pause'),btn("restart"),  btn('show decision'), btn('show explanation'), btn('next'), btn('back')]]#,btn('previous'),btn('stop'),
+            #   [sg.Text('Load media to start', key='-MESSAGE_AREA-')], [sg.Text('filename: ', key='-FILE_NAME-')]]
 
     window = sg.Window('Mini Player', layout, element_justification='center', finalize=True, resizable=True)
     window['-VID_OUT-'].expand(True, True)     
@@ -41,8 +41,7 @@ def make_welcome_window():
 
     return sg.Window("Start", layout, location=(800,600), finalize=True, keep_on_top=True)
 
-def make_index_window(layout):
-   
+def make_index_window(layout):   
     layout = [[sg.Text("Index window", key = "AA", size=(100,1))],
               layout,
               [btn("back")]]
@@ -79,7 +78,8 @@ def Collapsible(layout, key, title='', arrows=(sg.SYMBOL_DOWN, sg.SYMBOL_UP), co
 
 #------- main code & loop --------#
 welcome_window, index_window, player_window, decision_window, explanation_window = make_welcome_window(), None, None, None, None
-clipsPlayedInPlayer = 0
+clipsPlayedInPlayerForward = 0
+clipsPlayedInPlayerBackward = 0
 curr_clip = None
 
 while True:
@@ -118,8 +118,8 @@ while True:
             index_window.maximize()
           
     if window == index_window:
-        clipsPlayedInPlayer = 0
-
+        clipsPlayedInPlayerForward = 0
+        clipsPlayedInPlayerBackward = 0
         if event in (sg.WIN_CLOSED, "back"):
             index_window.close()
             welcome_window.un_hide()
@@ -131,7 +131,7 @@ while True:
 
         for values in section_values:
             if event in values:
-                clipsPlayedInPlayer += 1
+                clipsPlayedInPlayerForward += 1
                 index_window.hide()
                 player_window = make_player_window(player)
                 curr_clip = event
@@ -174,7 +174,9 @@ while True:
                 bio = io.BytesIO()
                 image.save(bio, format="PNG")
                 explanation_window["-IMAGE-"].update(data=bio.getvalue())
-                explanation_window.maximize()                     
+                explanation_window.maximize()  
+            else:
+                explanation_window["-IMAGE-"].update(data="NO")                       
             
         if event == 'play':
             list_player.play()
@@ -188,10 +190,10 @@ while True:
             num_of_clips_in_section = len(clips_names[curr_clip[0]]) 
                     
             index = clips_names[curr_clip[0]].index(curr_clip)             
-            next_index = 0 if index + 1 + clipsPlayedInPlayer >= num_of_clips_in_section else index + 1
+            next_index = 0 if index + 1 + clipsPlayedInPlayerForward >= num_of_clips_in_section else index + 1
             
-            if clipsPlayedInPlayer != None:
-                clipsPlayedInPlayer+= 1 
+            if clipsPlayedInPlayerForward != None:
+                clipsPlayedInPlayerForward+= 1 
             next_event = clips_names[curr_clip[0]][next_index]            
             new_loc = clips_path + "/" + next_event + ".mp4"                            
             media_list = inst.media_list_new([])
@@ -201,14 +203,40 @@ while True:
             list_player.play()
             curr_clip = next_event
 
-        if event == 'previous':
-            list_player.previous()    
-            list_player.previous()  
+        if event =="restart":
+            list_player.previous()
             list_player.play()
-        if player.is_playing():
-            window['-FILE_NAME-'].update(curr_clip)
-            window['-MESSAGE_AREA-'].update("{:02d}:{:02d} / {:02d}:{:02d}".format(*divmod(player.get_time()//1000, 60),
-                                                                     *divmod(player.get_length()//1000, 60)))
+
+
+        # if event == 'previous':
+        #     list_player.stop()  
+            
+        #     num_of_clips_in_section = len(clips_names[curr_clip[0]]) 
+                    
+        #     index = clips_names[curr_clip[0]].index(curr_clip)         
+            
+        #     next_index = index - 1 - clipsPlayedInPlayerBackward       
+        #     if next_index < 0:
+        #         next_index = num_of_clips_in_section - 1
+            
+                
+        #     # next_index = num_of_clips_in_section - 1 if index - 1 - clipsPlayedInPlayerForward <= 0 else index - 1
+            
+        #     if clipsPlayedInPlayerForward != None:
+        #         clipsPlayedInPlayerForward += 1 
+        #     next_event = clips_names[curr_clip[0]][next_index]            
+        #     new_loc = clips_path + "/" + next_event + ".mp4"                            
+        #     media_list = inst.media_list_new([])
+        #     media_list.add_media(new_loc)
+        #     list_player.set_media_list(media_list)             
+        #     list_player.play()
+        #     list_player.play()
+        #     curr_clip = next_event      
+
+        # if player.is_playing():
+        #     window['-FILE_NAME-'].update(curr_clip)
+        #     window['-MESSAGE_AREA-'].update("{:02d}:{:02d} / {:02d}:{:02d}".format(*divmod(player.get_time()//1000, 60),
+        #                                                              *divmod(player.get_length()//1000, 60)))
     
     if window == decision_window:
         if event in (sg.WIN_CLOSED, "back"):
