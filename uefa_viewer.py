@@ -4,6 +4,7 @@ import vlc
 from sys import platform as PLATFORM
 import os, io
 from PIL import Image
+from images import *
 
 #------- setup VLC --------#
 inst = vlc.Instance()
@@ -24,7 +25,7 @@ def make_player_window(player):
               [ btn('play'), btn('pause'),btn("restart"),  btn('show decision'), btn('show explanation'), btn('next'), btn('back')]]#,btn('previous'),btn('stop'),
             #   [sg.Text('Load media to start', key='-MESSAGE_AREA-')], [sg.Text('filename: ', key='-FILE_NAME-')]]
 
-    window = sg.Window('Mini Player', layout, element_justification='center', finalize=True, resizable=True)
+    window = sg.Window('Player', layout, element_justification='center', finalize=True, resizable=True)
     window['-VID_OUT-'].expand(True, True)     
     
     if PLATFORM.startswith('linux'):
@@ -46,19 +47,19 @@ def make_index_window(layout):
               layout,
               [btn("back")]]
     
-    return sg.Window("index", layout, finalize=True, resizable = True)
+    return sg.Window("Index", layout, finalize=True, resizable = True)
 
 def make_decision_window():
     layout = [[sg.Image(key="-IMAGE-")],
               [btn("back"), btn("show explanation")]]
     
-    return sg.Window("index", layout,element_justification='center', finalize=True, resizable = True)
+    return sg.Window("Decision", layout,element_justification='center', finalize=True, resizable = True)
 
 def make_explanation_window():
     layout = [[sg.Image(key="-IMAGE-")],
               [btn("back"), btn("show decision")]]
     
-    return sg.Window("index", layout, finalize=True,element_justification='center', resizable = True)
+    return sg.Window("Explanation", layout, finalize=True,element_justification='center', resizable = True)
 
 #------- helper functions --------#
 def splitList(x):
@@ -162,7 +163,10 @@ while True:
                 bio = io.BytesIO()
                 image.save(bio, format="PNG")
                 decision_window["-IMAGE-"].update(data=bio.getvalue())
-                decision_window.maximize()                                             
+                decision_window.maximize()  
+            else:
+                decision_window["-IMAGE-"].update(data=no_decision_image)
+                # decision_window.maximize()                                            
         
         if event == 'show explanation':
             list_player.pause() 
@@ -176,7 +180,8 @@ while True:
                 explanation_window["-IMAGE-"].update(data=bio.getvalue())
                 explanation_window.maximize()  
             else:
-                explanation_window["-IMAGE-"].update(data="NO")                       
+                explanation_window["-IMAGE-"].update(data=no_explanation_image)
+                # explanation_window.maximize()                     
             
         if event == 'play':
             list_player.play()
@@ -253,7 +258,10 @@ while True:
                 bio = io.BytesIO()
                 image.save(bio, format="PNG")
                 explanation_window["-IMAGE-"].update(data=bio.getvalue())
-                explanation_window.maximize()          
+                explanation_window.maximize()
+            else:
+                explanation_window["-IMAGE-"].update(data=no_explanation_image)
+                # explanation_window.maximize()          
     
     if window == explanation_window:
         if event in (sg.WIN_CLOSED, "back"):
@@ -272,7 +280,10 @@ while True:
                 bio = io.BytesIO()
                 image.save(bio, format="PNG")
                 decision_window["-IMAGE-"].update(data=bio.getvalue())
-                decision_window.maximize()                
+                decision_window.maximize()   
+            else:
+                decision_window["-IMAGE-"].update(data=no_decision_image)
+                # decision_window.maximize()                  
               
     if event == sg.WIN_CLOSED:
         break
