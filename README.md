@@ -1,5 +1,5 @@
 # UEFA Refereeing Assistance Program Viewer
-With the the requirement of the (paid) Mulppy application to view the 2020 versions (and possibly future versions) of UEFA's Refereeing Assistance Program, I have created a simple GUI in Python to view the clips and associated technical decision (and if applicable, UEFA's explanation of the decision). The video test functionality of the original application has not been included. Program files avaiable from [Dutch Referee](https://www.dutchreferee.com/refereeing-assistance-programme/). To use, download `uefa_viewer.exe` and provide the file path to the *Resource* folder.
+With the requirement of the (paid) Mulppy application to view the 2020 versions (and possibly future versions) of UEFA's Refereeing Assistance Program, I have created a simple GUI in Python to view the clips and associated technical decision (and if applicable, UEFA's explanation of the decision). The video test functionality of the original application has not been included. Program files avaiable from [Dutch Referee](https://www.dutchreferee.com/refereeing-assistance-programme/). To use, download `uefa_viewer.exe` and provide the file path to the *Resource* folder.
 
 ## Installation
 Python version used: `Python 3.7`
