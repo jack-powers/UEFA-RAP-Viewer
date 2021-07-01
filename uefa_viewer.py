@@ -135,26 +135,26 @@ while True:
         if event in (sg.WIN_CLOSED, "back"):
             index_window.close()
             welcome_window.un_hide()
-        
-        for i in range(len(section_names)):
-            if event.startswith(str(i)):
-                window[str(i)].update(visible=not window[str(i)].visible)
-                window[str(i)+'-BUTTON-'].update(window[str(i)].metadata[0] if window[str(i)].visible else window[str(i)].metadata[1])
+        else:
+            for i in range(len(section_names)):
+                if event.startswith(str(i)):
+                    window[str(i)].update(visible=not window[str(i)].visible)
+                    window[str(i)+'-BUTTON-'].update(window[str(i)].metadata[0] if window[str(i)].visible else window[str(i)].metadata[1])
 
-        for values in section_values:
-            if event in values:
-                clipsPlayedInPlayerForward += 1
-                index_window.hide()
-                player_window = make_player_window(player)
-                curr_clip = event
-                loc = clips_path + "/" + curr_clip + ".mp4"                  
-                  
-                index_of_clip = clips_names[curr_clip[0]].index(curr_clip)          
-                media_list = inst.media_list_new([])
-                media_list.add_media(loc)
-                list_player.set_media_list(media_list)
-                player_window.maximize()
-                list_player.play()                      
+            for values in section_values:
+                if event in values:
+                    clipsPlayedInPlayerForward += 1
+                    index_window.hide()
+                    player_window = make_player_window(player)
+                    curr_clip = event
+                    loc = clips_path + "/" + curr_clip + ".mp4"                  
+                    
+                    index_of_clip = clips_names[curr_clip[0]].index(curr_clip)          
+                    media_list = inst.media_list_new([])
+                    media_list.add_media(loc)
+                    list_player.set_media_list(media_list)
+                    player_window.maximize()
+                    list_player.play()                      
        
     if window == player_window:   
         if event in (sg.WIN_CLOSED, "back"):
