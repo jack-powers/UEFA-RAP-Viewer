@@ -36,14 +36,15 @@ def make_player_window(player):
     return window
 
 def make_welcome_window():
-    layout = [[sg.Text("Welcome to UEFA viewer", justification='center')],
+    layout = [[sg.Text("Welcome to UEFA Match Situation Clip Viewer", justification='center')],
               [sg.Text("Please enter or browse to path for the Resource folder of the RAP files and press Start", justification='center')],
         [sg.Input(default_text='C:/Users/jpowe/Desktop/UEFA-2020-1/UEFA-2020-1/Resource', size=(60, 1), key='-FOLDER_LOCATION-'), sg.FolderBrowse(), sg.Button('Start')]]
 
     return sg.Window("Start", layout, location=(800,600), finalize=True, keep_on_top=True)
 
 def make_index_window(layout):   
-    layout = [[sg.Text("Index window", key = "AA", size=(100,1))],
+    layout = [[sg.Text("Welcome to UEFA Match Situation Clip Viewer",size=(60, 1), font=("Helvetica", 25))],
+              [sg.Text("Index window", key = "-PATH-", size=(100,1))],
               layout,
               [btn("back")]]
     
@@ -60,6 +61,11 @@ def make_explanation_window():
               [btn("back"), btn("show decision")]]
     
     return sg.Window("Explanation", layout, finalize=True,element_justification='center', resizable = True)
+
+def make_error_window():
+    layout = [[sg.Text("Path incorrect! Clips not found. Is the file path set to the Resource folder?", size = (60,1))],
+              [btn("back")]]
+    return sg.Window("Path not found", layout, finalize=True,element_justification='center', resizable = True)
 
 #------- helper functions --------#
 def splitList(x):
@@ -78,7 +84,7 @@ def Collapsible(layout, key, title='', arrows=(sg.SYMBOL_DOWN, sg.SYMBOL_UP), co
                       [sg.pin(sg.Column(layout, key=key, visible=not collapsed, metadata=arrows))]], pad=(0,0))
 
 #------- main code & loop --------#
-welcome_window, index_window, player_window, decision_window, explanation_window = make_welcome_window(), None, None, None, None
+welcome_window, index_window, player_window, decision_window, explanation_window, error_window = make_welcome_window(), None, None, None, None, None
 clipsPlayedInPlayerForward = 0
 clipsPlayedInPlayerBackward = 0
 curr_clip = None
@@ -94,30 +100,36 @@ while True:
             clips_path = resource_path + "/medias/clips"
             decisions_path = resource_path + "/medias/images/decisions"
             explanations_path = resource_path + "/medias/images/explanations"
-            try:            
+            
+            
+            if os.path.exists(clips_path):            
                 clips = os.listdir(clips_path)
                 decisions = os.listdir(decisions_path)
                 explanations = os.listdir(explanations_path)
-            except:
-                print("Bad path!")
-                pass    
             
-            clips_names = [x[:-4] for x in clips]
-            clips_names = sorted(clips_names, key=lambda x: int(x[1:]))
-            clips_names = splitList(clips_names)            
-            section_names = list(clips_names.keys())
-            section_values = list(clips_names.values())
-            
-            sections = [[[sg.Button(y) for y in clips_names[x]]] for x in section_names ]            
-            
-            layout = []
-            for i, section in enumerate(sections):
-                layout.append([Collapsible(section, str(i), str(section_names[i]),collapsed=True)])
-            
-            index_window = make_index_window(layout)
-            index_window['AA'].update("Folder path: " + values['-FOLDER_LOCATION-'])
-            index_window.maximize()
-          
+                clips_names = [x[:-4] for x in clips]
+                clips_names = sorted(clips_names, key=lambda x: int(x[1:]))
+                clips_names = splitList(clips_names)            
+                section_names = list(clips_names.keys())
+                section_values = list(clips_names.values())
+                
+                sections = [[[sg.Button(y) for y in clips_names[x]]] for x in section_names ]            
+                
+                layout = []
+                for i, section in enumerate(sections):
+                    layout.append([Collapsible(section, str(i), str(section_names[i]),collapsed=True)])
+                
+                index_window = make_index_window(layout)
+                index_window['-PATH-'].update("Folder path: " + values['-FOLDER_LOCATION-'])
+                index_window.maximize()
+            else:
+                error_window = make_error_window()        
+     
+    if window == error_window:
+        if event in (sg.WIN_CLOSED, "back"):
+            error_window.close()
+            welcome_window.un_hide()    
+               
     if window == index_window:
         clipsPlayedInPlayerForward = 0
         clipsPlayedInPlayerBackward = 0
