@@ -9,7 +9,6 @@ pip install PySimpleGUI
 pip install Pillow
 pip install vlc	
 ```
-
 ## Usage
 ### Windows Executable Version
 To allow wider use without the need for Python or package installations, an executable file for Windows machines is also provided, `uefa_viewer.exe`. Used [pysimplegui-exemaker](https://pypi.org/project/pysimplegui-exemaker/) to convert to executable. 
